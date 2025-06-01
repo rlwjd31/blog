@@ -1,9 +1,6 @@
-import Image from "next/image";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return (
-    <div>
-      <h1>main page</h1>
-    </div>
-  );
+  // TODO: 나중에 homepage는 landing page인 hero section으로 변경
+  redirect("/blog");
 }

@@ -26,7 +26,7 @@ export default function Header() {
             <Link href="/blog" className="hover:text-primary font-medium">
               블로그
             </Link>
-            <Link href="/about" className="hover:text-primary font-medium">
+            <Link href="/portfolio" className="hover:text-primary font-medium">
               포트폴리오
             </Link>
           </nav>
