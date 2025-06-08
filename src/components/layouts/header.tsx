@@ -10,7 +10,7 @@ export default function Header() {
         <div className="grid w-full grid-cols-3 items-center">
           <div className="flex items-center justify-start">
             <Image
-              src="/images/me_develop"
+              src="/images/me_developer.png"
               alt="Profile Image"
               width={40}
               height={40}
@@ -33,12 +33,7 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center justify-end">
-            <Button
-              asChild
-              size="sm"
-              variant="ghost"
-              className="hover:bg-accent hover:text-accent-foreground gap-2"
-            >
+            <Button asChild size="sm" className="text-foreground">
               <Link href={ROUTES.BLOG.WRITE}>글쓰기</Link>
             </Button>
           </div>
