@@ -6,6 +6,7 @@ import {
   PageObjectResponse,
   PersonUserObjectResponse,
 } from "@notionhq/client";
+import { handleNotionError } from "./notionErrorHandler";
 
 const notion = new Client({
   auth: process.env.NOTION_TOKEN,
@@ -53,7 +54,7 @@ export const getPublishedPosts = async ({
   retryCount?: number;
   filterTags?: string[];
   sortValue?: SortValueType;
-}): Promise<Post[]> => {
+}): Promise<Post[] | null> => {
   try {
     const response = await notion.databases.query({
       database_id: process.env.NOTION_DATABASE_ID!,
@@ -65,18 +66,20 @@ export const getPublishedPosts = async ({
               equals: "Published",
             },
           },
-          // ? https://developers.notion.com/reference/post-database-query
-          // ? 여러 태그를 필터링하기 위해선 아래와 같은 형식으로 넣어주어야 함
-          // * [
-          // *   {
-          // *     "property": "Tags",
-          // *     "contains": "A"
-          // *   },
-          // *   {
-          // *     "property": "Tags",
-          // *     "contains": "B"
-          // *   }
-          // * ]
+          /**
+           * @see https://developers.notion.com/reference/post-database-query
+           * @description 여러 태그를 필터링하기 위한 형식 예시:
+           * [
+           *   {
+           *     "property": "Tags",
+           *     "contains": "A"
+           *   },
+           *   {
+           *     "property": "Tags", 
+           *     "contains": "B"
+           *   }
+           * ]
+           */
           ...filterTags.map((tag) => ({ property: "Tags", multi_select: { contains: tag } })),
         ],
       },
@@ -95,39 +98,10 @@ export const getPublishedPosts = async ({
 
     return posts;
   } catch (error) {
-    if (error instanceof APIResponseError) {
-      // * Rate limit exceeded - API 호출 횟수 초과 (429)
-      // * 재시도 횟수 3번으로 제한
-      if (error.status === 429) {
-        if (retryCount >= 3) {
-          throw new Error("최대 재시도 횟수를 초과했습니다. 잠시 후 다시 시도해주세요.");
-        }
-
-        const retryAfter = parseInt((error.headers as Headers).get("retry-after") ?? "60", 10);
-        await new Promise((resolve) => setTimeout(resolve, retryAfter * 1000));
-
-        return getPublishedPosts({ retryCount: retryCount + 1 });
-      }
-
-      // * Bad Request - 잘못된 요청 (400)
-      if (error.status === 400) {
-        throw new Error("잘못된 요청입니다. 요청 형식을 확인해주세요.");
-      }
-
-      // * Not Found - 리소스를 찾을 수 없음 (404)
-      if (error.status === 404) {
-        throw new Error("요청한 Database를 찾을 수 없습니다.");
-      }
-
-      // * 기타 에러
-      throw new Error(`Notion API 호출 중 에러가 발생했습니다: ${error.message}`);
-    }
-
-    // * api response 외의 error
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-
-    return [];
+    return handleNotionError(
+      error,
+      () => getPublishedPosts({ filterTags, sortValue, retryCount: retryCount + 1 }),
+      retryCount
+    ) ?? [];
   }
 };
