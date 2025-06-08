@@ -9,3 +9,5 @@ export type Post = {
   modifiedDate?: string;
   slug: string;
 };
+
+export type SortValueType = "oldest" | "latest";
