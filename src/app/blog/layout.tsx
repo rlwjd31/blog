@@ -1,18 +1,46 @@
 import { Card } from "@/components/ui/card";
-
+import { Checkbox } from "@/components/ui/checkbox";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export default function BlogListLayout({ children }: { children: React.ReactNode }) {
-
+  // tag mock up data
+  const tags = [
+    { id: 1, name: "Technology", count: 12 },
+    { id: 2, name: "Travel", count: 8 },
+    { id: 3, name: "Business", count: 15 },
+    { id: 4, name: "Economy", count: 6 },
+    { id: 5, name: "Sports", count: 10 }
+  ];
 
   return (
     <section className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 md:flex-row">
       {/* 왼쪽 태그 필터 사이드바 */}
+      {/* TODO: 추후 use hook을 적용하기 위해서 client component로 추출 */}
       <aside className="h-fit w-56 shrink-0 max-md:hidden md:block">
         <Card className="gap-3 rounded-md border-stone-600 bg-stone-900 p-2">
           <h2 className="rounded-md bg-white p-2.5 text-sm font-semibold text-stone-900">
             Category
           </h2>
-          <ul className="flex flex-col gap-2">{/* tag filter section */}</ul>
+          <ul className="flex flex-col gap-2">
+            {tags.map((tag) => (
+              <li key={tag.id} className="flex items-center gap-2 px-1">
+                <Checkbox />
+                <Link key={tag.id} href={`?tag=${tag.name}`} className="w-full">
+                  <div
+                    className={cn(
+                      "flex items-center justify-between rounded-md px-2 py-1.5 text-sm text-white transition-colors hover:bg-stone-700"
+                      // selectedTag === tag.name &&
+                      //   "bg-muted-foreground/10 text-foreground font-medium"
+                    )}
+                  >
+                    <span>{tag.name}</span>
+                    <span>{tag.count}</span>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </Card>
       </aside>
       {/* 메인 컨텐츠 영역 */}
