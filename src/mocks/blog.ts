@@ -103,3 +103,12 @@ export const blogs: Blog[] = [
     slug: "gaming-evolution-nextgen",
   },
 ];
+
+// tag mock up data
+export const tags = [
+  { id: 1, name: "Technology", count: 12 },
+  { id: 2, name: "Travel", count: 8 },
+  { id: 3, name: "Business", count: 15 },
+  { id: 4, name: "Economy", count: 6 },
+  { id: 5, name: "Sports", count: 10 },
+];

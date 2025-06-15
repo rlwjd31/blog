@@ -11,5 +11,10 @@ export type Blog = {
   slug: string;
 };
 
-
 export type SortValueType = "oldest" | "latest";
+
+export type Tag = {
+  id: string;
+  name: string;
+  count: number;
+};
