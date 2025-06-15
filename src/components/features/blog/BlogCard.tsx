@@ -20,7 +20,7 @@ export default function BlogCard({ blog }: { blog: Blog }) {
             className="h-full w-full object-cover transition-transform duration-200 ease-out group-hover:scale-[1.2]"
             loading="lazy"
           />
-          <div className="absolute top-0 left-0 flex w-full flex-row gap-2 bg-black/10 p-2">
+          <div className="absolute top-0 left-0 flex w-full gap-2 bg-black/10 p-2">
             {tags &&
               tags.length > 0 &&
               tags.map((tag, index) => (

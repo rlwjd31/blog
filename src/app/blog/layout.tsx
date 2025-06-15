@@ -1,4 +1,4 @@
-import TagSection from "@/components/features/blog/TagSection";
+import TagSection from "@/components/features/blog/TagSection.client";
 import { tags } from "@/mocks/blog";
 
 export default function BlogListLayout({ children }: { children: React.ReactNode }) {
