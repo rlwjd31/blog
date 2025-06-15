@@ -204,7 +204,7 @@ export default function BlogListLayout({ children }: { children: React.ReactNode
               Sort by:
             </label>
             <select id="sort" className="rounded bg-zinc-800 px-2 py-1 text-sm text-white">
-              <option value="newest">Newest</option>
+              <option value="latest">Latest</option>
               <option value="oldest">Oldest</option>
             </select>
           </div>

@@ -6,7 +6,7 @@ import { ROUTES } from "@/lib/constants/routes";
 export default function Header() {
   return (
     <header className="bg-background sticky top-0 z-50 border-b">
-      <div className="container flex h-[var(--header-height)] items-center px-4">
+      <div className="mx-auto flex h-[var(--header-height)] w-full items-center px-4">
         <div className="grid w-full grid-cols-3 items-center">
           <div className="flex items-center justify-start">
             <Image
