@@ -1,4 +1,5 @@
-export type Post = {
+// Blog 타입 정의
+export type Blog = {
   id: string;
   title: string;
   description?: string;
@@ -9,5 +10,6 @@ export type Post = {
   modifiedDate?: string;
   slug: string;
 };
+
 
 export type SortValueType = "oldest" | "latest";

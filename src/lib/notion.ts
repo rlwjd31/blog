@@ -1,4 +1,4 @@
-import { Post, SortValueType } from "@/types/blog.type";
+import { Blog, SortValueType } from "@/types/blog.type";
 import {
   APIResponseError,
   Client,
@@ -12,7 +12,7 @@ const notion = new Client({
   auth: process.env.NOTION_TOKEN,
 });
 
-const parseNotionPageToPostType = (page: PageObjectResponse): Post | null => {
+const parseNotionPageToBlogType = (page: PageObjectResponse): Blog | null => {
   if (!page.properties) return null;
 
   const { properties } = page;
@@ -46,7 +46,7 @@ const parseNotionPageToPostType = (page: PageObjectResponse): Post | null => {
   };
 };
 
-export const getPublishedPosts = async ({
+export const getPublishedBlogs = async ({
   retryCount = 0,
   filterTags = [],
   sortValue = "latest",
@@ -54,7 +54,7 @@ export const getPublishedPosts = async ({
   retryCount?: number;
   filterTags?: string[];
   sortValue?: SortValueType;
-}): Promise<Post[] | null> => {
+}): Promise<Blog[] | null> => {
   try {
     const response = await notion.databases.query({
       database_id: process.env.NOTION_DATABASE_ID!,
@@ -67,7 +67,7 @@ export const getPublishedPosts = async ({
             },
           },
           /**
-           * @see https://developers.notion.com/reference/post-database-query
+           * @see https://developers.notion.com/reference/blog-database-query
            * @description 여러 태그를 필터링하기 위한 형식 예시:
            * [
            *   {
@@ -75,7 +75,7 @@ export const getPublishedPosts = async ({
            *     "contains": "A"
            *   },
            *   {
-           *     "property": "Tags", 
+           *     "property": "Tags",
            *     "contains": "B"
            *   }
            * ]
@@ -91,17 +91,19 @@ export const getPublishedPosts = async ({
       ],
     });
 
-    const posts = response.results
+    const blogs = response.results
       .filter(isFullPage)
-      .map(parseNotionPageToPostType)
+      .map(parseNotionPageToBlogType)
       .filter((page) => page !== null);
 
-    return posts;
+    return blogs;
   } catch (error) {
-    return handleNotionError(
-      error,
-      () => getPublishedPosts({ filterTags, sortValue, retryCount: retryCount + 1 }),
-      retryCount
-    ) ?? [];
+    return (
+      handleNotionError(
+        error,
+        () => getPublishedBlogs({ filterTags, sortValue, retryCount: retryCount + 1 }),
+        retryCount
+      ) ?? []
+    );
   }
 };
