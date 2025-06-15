@@ -1,9 +1,8 @@
 import BlogCard from "@/components/features/blog/BlogCard";
 import { getPublishedBlogs } from "@/lib/notion";
-import { blogs } from "@/mocks/blog";
 
 export default async function BlogListPage() {
-  const response = await getPublishedBlogs({});
+  const blogs = (await getPublishedBlogs({})) ?? [];
 
   return (
     <section className="min-w-0 flex-1">
